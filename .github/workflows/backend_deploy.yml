@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - main
-    # paths:
-    #   - 'backend_webapp/**'   # ya jo tera folder hai
+    paths:
+      - 'backend_webapp/**'   # 🔥 only trigger when backend changes
 
 jobs:
   build-and-deploy:
@@ -15,21 +15,26 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      # 🔍 Debug (optional but useful)
+      - name: Debug - List files
+        run: ls -R
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
+      # ✅ Install dependencies (NO cd needed)
       - name: Install dependencies
-        run: |
-          cd backend_webapp
-          pip install -r requirements.txt
+        working-directory: backend_webapp
+        run: pip install -r requirements.txt
 
+      # ✅ Zip artifact
       - name: Zip artifact
-        run: |
-          cd backend_webapp
-          zip -r release.zip .
+        working-directory: backend_webapp
+        run: zip -r release.zip .
 
+      # ✅ Deploy
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
