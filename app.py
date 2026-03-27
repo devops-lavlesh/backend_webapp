@@ -1,13 +1,17 @@
 import pyodbc
 import uvicorn
 import os
+
+port = int(os.environ.get("PORT", 8000))
+uvicorn.run(app, host="0.0.0.0", port=port)
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
-load_dotenv()
+# load_dotenv()
 
 # connection_string = os.getenv("CONNECTION_STRING")
 connection_string = os.getenv("CONNECTION_STRING")
