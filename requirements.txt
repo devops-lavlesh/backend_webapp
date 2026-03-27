@@ -1,6 +1,7 @@
 pyodbc
 fastapi
 uvicorn[standard]
+gunicorn
 pydantic
 azure-identity
 python-dotenv

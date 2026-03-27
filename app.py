@@ -1,45 +1,44 @@
 import pyodbc
-import uvicorn
 import os
-
-port = int(os.environ.get("PORT", 8000))
-uvicorn.run(app, host="0.0.0.0", port=port)
 
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
-from dotenv import load_dotenv
 
-# Load environment variables from .env file
-# load_dotenv()
+# create app
+app = FastAPI()
 
-# connection_string = os.getenv("CONNECTION_STRING")
+# connection string
 connection_string = os.getenv("DB_CONNECTION")
 print("Connection String:", connection_string)
 
-app = FastAPI()
-
-# Configure CORSMiddleware to allow all origins (disable CORS for development)
+# CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # This allows all origins (use '*' for development only)
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Define the Task model
+# Model
 class Task(BaseModel):
     title: str
     description: str
 
-# Create a table for tasks (You can run this once outside of the app)
+# Health check (VERY IMPORTANT)
+@app.get("/")
+def home():
+    return {"status": "running"}
+
+# Create table
 @app.get("/api")
 def create_tasks_table():
     try:
         conn = pyodbc.connect(connection_string)
         cursor = conn.cursor()
         cursor.execute("""
+            IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Tasks' and xtype='U')
             CREATE TABLE Tasks (
                 ID int NOT NULL PRIMARY KEY IDENTITY,
                 Title varchar(255),
@@ -49,7 +48,7 @@ def create_tasks_table():
         conn.commit()        
     except Exception as e:
         print(e)
-    return "Table Created... Tasks API Ready"
+    return "Table Ready"
 
 # List all tasks
 @app.get("/api/tasks")
@@ -110,6 +109,4 @@ def delete_task(task_id: int):
         conn.commit()
         return {"message": "Task deleted"}
 
-if __name__ == "__main__":
-    create_tasks_table()
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+
