@@ -5,7 +5,8 @@ on:
     branches:
       - main
     paths:
-      - 'backend_webapp/**'   # 🔥 only trigger when backend changes
+      - 'backend_webapp/**'  
+      - '.github/workflows/backend-deploy.yml' # 🔥 only trigger when backend changes
 
 jobs:
   build-and-deploy:
