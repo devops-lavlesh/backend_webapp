@@ -14,7 +14,8 @@ from dotenv import load_dotenv
 # load_dotenv()
 
 # connection_string = os.getenv("CONNECTION_STRING")
-connection_string = os.getenv("CONNECTION_STRING")
+connection_string = os.getenv("DB_CONNECTION")
+print("Connection String:", connection_string)
 
 app = FastAPI()
 
