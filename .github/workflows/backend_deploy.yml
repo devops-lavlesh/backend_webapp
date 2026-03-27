@@ -18,7 +18,9 @@ jobs:
 
       # 🔍 Debug (optional but useful)
       - name: Debug - List files
-        run: ls -R
+        run: |
+          pwd
+          ls -R
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -27,13 +29,14 @@ jobs:
 
       # ✅ Install dependencies (NO cd needed)
       - name: Install dependencies
-        working-directory: backend_webapp
+        working-directory: .
         run: pip install -r requirements.txt
 
       # ✅ Zip artifact
       - name: Zip artifact
-        working-directory: backend_webapp
-        run: zip -r release.zip .
+        run: |
+          cd backend_webapp
+          zip -r release.zip .
 
       # ✅ Deploy
       - name: Deploy to Azure Web App
