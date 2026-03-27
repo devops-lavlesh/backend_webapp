@@ -29,12 +29,15 @@ jobs:
 
       # ✅ Install dependencies (NO cd needed)
       - name: Install dependencies
-        working-directory: .
-        run: pip install -r requirements.txt
+        run: |
+          cd backend_webapp
+          pip install -r requirements.txt
 
       # ✅ Zip artifact
       - name: Zip artifact
-        run: zip -r release.zip .
+        run: |
+          cd backend_webapp
+          zip -r ../release.zip .
 
       # ✅ Deploy
       - name: Deploy to Azure Web App
